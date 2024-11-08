@@ -1,0 +1,35 @@
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer, PorterStemmer
+import string
+
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+with open('LR_16.txt', 'r', encoding='utf-8') as file:
+    text = file.read()
+
+tokens = text.split()
+
+tokens = [word for word in tokens if word not in string.punctuation]
+
+lemmatizer = WordNetLemmatizer()
+lemmatized_tokens = [lemmatizer.lemmatize(word) for word in tokens]
+
+stemmer = PorterStemmer()
+stemmed_tokens = [stemmer.stem(word) for word in tokens]
+
+stop_words = set(stopwords.words('english')) 
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+
+with open('processed_text.txt', 'w', encoding='utf-8') as f:
+    f.write("Original Tokens:\n" + str(tokens) + "\n\n")
+    f.write("Lemmatized Tokens:\n" + str(lemmatized_tokens) + "\n\n")
+    f.write("Stemmed Tokens:\n" + str(stemmed_tokens) + "\n\n")
+    f.write("Filtered Tokens (No Stopwords):\n" + str(filtered_tokens) + "\n\n")
+
+    final_text = ' '.join(filtered_tokens) 
+    f.write("\nFinal Processed Text:\n" + final_text + "\n")
+
+print("Оброблений текст записано в 'processed_text.txt'.")
+
