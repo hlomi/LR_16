@@ -1,0 +1,57 @@
+import nltk
+import string
+import numpy as np
+import matplotlib.pyplot as plt
+from collections import Counter
+
+nltk.download('punkt')
+nltk.download('stopwords')
+
+from nltk.corpus import stopwords
+
+try:
+    with open('blake-poems.txt', 'r', encoding='utf-8') as File:
+        text = File.read()
+    print("Файл відкрито успішно!")
+except FileNotFoundError:
+    print("Файл не знайдено!")
+    exit(0)
+
+def count_words(text):
+    words = text.split()  
+    return len(words)
+
+def most_used_words(text, title):
+    words = text.split()
+
+    cnt = Counter(words)
+
+    cort = cnt.most_common(10)
+
+    x = [cort[el][0] for el in range(len(cort))]  # Слова
+    y = [cort[el][1] for el in range(len(cort))]  # Частота
+
+    plt.bar(x, y)
+    plt.title(title)
+    plt.xlabel("Слова")
+    plt.ylabel("Кількість повторень")
+    plt.xticks(rotation=45)
+    plt.show()
+
+print(f"Кількість слів у тексті: {count_words(text)}")
+
+most_used_words(text, "10 найбільш вживаних слів у тексті (без очищення)")#
+
+def clean_text(text):
+    text = text.lower()
+    text = text.translate(str.maketrans('', '', string.punctuation))
+    words = text.split()
+    stop_words = set(stopwords.words('english'))
+    words = [word for word in words if word not in stop_words]
+    return ' '.join(words)
+
+cleaned_text = clean_text(text)
+
+print(f"Кількість слів після очищення: {count_words(cleaned_text)}")
+
+most_used_words(cleaned_text, "10 найбільш вживаних слів у тексті (після очищення)")
